@@ -1,3 +1,5 @@
+import logging
+
 from aiogram import Router, F, Bot, types
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 
@@ -157,12 +159,49 @@ MNA_DATA = [
     }
 ]
 
-@inline_router.inline_query()
-async def handle_inline_query(query: InlineQuery):
-    try:
-        results = []
 
-        # Filter data if query is provided
+async def is_user_in_channel(user_id: int, bot):
+    channel_id = -1002068999312
+    try:
+        sub = await bot.get_chat_member(chat_id=channel_id, user_id=user_id)
+        logging.info(sub)
+        return sub.status != "left"
+    except Exception as e:
+        print(f"Произошла ошибка при проверке подписки: {e}")
+        return False
+
+
+@inline_router.inline_query()
+async def handle_inline_query(query: InlineQuery, bot: Bot):
+    try:
+        if not await is_user_in_channel(query.from_user.id, bot):
+            subscription_text = (
+                "❗️ Для использования бота требуется подписка на канал\n\n"
+                "📢 <b>Не Дом.ру</b>\n"
+                "🔗 https://t.me/+F0O_FIydoKg2M2U6\n\n"
+                "После подписки вернись и попробуй еще раз"
+            )
+
+            return await query.answer(
+                results=[
+                    InlineQueryResultArticle(
+                        id="subscribe_required",
+                        title="Требуется подписка на канал",
+                        description="Подпишись на канал Не Дом.ру для доступа",
+                        input_message_content=InputTextMessageContent(
+                            message_text=subscription_text,
+                            parse_mode="HTML",
+                            disable_web_page_preview=True
+                        ),
+                        thumb_url="https://img.icons8.com/color/48/000000/subscription.png",
+                    )
+                ],
+                cache_time=5,
+                is_personal=True
+            )
+
+        results = []
+        # Rest of your code remains the same...
         search_query = query.query.lower()
         filtered_data = [
             item for item in MNA_DATA
@@ -176,8 +215,8 @@ async def handle_inline_query(query: InlineQuery):
             message_text = (
                 f"📡 *{item['name']}*\n\n"
                 f"🔐 Авторизация: {item['authorization']}\n"
-                f"🔌 Подключение: {item['connection']}\n\n"
-                f"[Провайдер в БЗ]({item['link']})"
+                f"🔌 Подключение: {item['connection']}\n"
+                f"🔗 [Подробнее]({item['link']})"
             )
 
             results.append(
@@ -212,7 +251,7 @@ async def handle_inline_query(query: InlineQuery):
         )
 
     except Exception as e:
-        print(f"Error: {e}")  # Add debug logging
+        print(f"Error in inline query: {e}")
         error_result = InlineQueryResultArticle(
             id="error",
             title="Произошла ошибка",
