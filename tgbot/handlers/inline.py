@@ -215,8 +215,8 @@ async def handle_inline_query(query: InlineQuery, bot: Bot):
             message_text = (
                 f"📡 *{item['name']}*\n\n"
                 f"🔐 Авторизация: {item['authorization']}\n"
-                f"🔌 Подключение: {item['connection']}\n"
-                f"🔗 [Подробнее]({item['link']})"
+                f"🔌 Подключение: {item['connection']}\n\n"
+                f"[Подробнее в БЗ]({item['link']})"
             )
 
             results.append(
