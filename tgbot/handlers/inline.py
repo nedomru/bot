@@ -1,22 +1,22 @@
 from aiogram import Router, F, Bot, types
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
-import aiohttp
+import requests
 import json
+from functools import lru_cache
 
 inline_router = Router()
 
 
-async def fetch_mna_data():
-    async with aiohttp.ClientSession() as session:
-        async with session.get('https://helper.chrsnv.ru/api/mna.json') as response:
-            data = await response.json()
-            return data['mna']
+@lru_cache(maxsize=1)
+def fetch_mna_data():
+    response = requests.get('https://helper.chrsnv.ru/api/mna.json', verify=False)
+    return response.json()['mna']
 
 
 @inline_router.inline_query()
 async def handle_inline_query(query: InlineQuery):
     try:
-        mna_data = await fetch_mna_data()
+        mna_data = fetch_mna_data()  # This is now a synchronous call
         results = []
 
         # Filter data if query is provided
@@ -31,10 +31,10 @@ async def handle_inline_query(query: InlineQuery):
         # Create results
         for idx, item in enumerate(filtered_data):
             message_text = (
-                f"Провайдер *{item['name']}*\n\n"
-                f"🔐 Тип авторизации: {item['authorization']}\n"
-                f"🔌 Тип подключения: {item['connection']}\n"
-                f"🔗 [Провайдер в БЗ]({item['link']})"
+                f"📡 *{item['name']}*\n\n"
+                f"🔐 Авторизация: {item['authorization']}\n"
+                f"🔌 Подключение: {item['connection']}\n"
+                f"🔗 [Подробнее]({item['link']})"
             )
 
             results.append(
@@ -50,7 +50,6 @@ async def handle_inline_query(query: InlineQuery):
                 )
             )
 
-        # If no results found
         if not results:
             results.append(
                 InlineQueryResultArticle(
@@ -65,12 +64,12 @@ async def handle_inline_query(query: InlineQuery):
 
         await query.answer(
             results=results,
-            cache_time=300,  # Cache for 5 minutes
+            cache_time=300,
             is_personal=True
         )
 
     except Exception as e:
-        # Handle errors
+        print(f"Error: {e}")  # Add debug logging
         error_result = InlineQueryResultArticle(
             id="error",
             title="Произошла ошибка",
