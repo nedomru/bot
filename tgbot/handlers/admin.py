@@ -3,7 +3,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 
 from tgbot.filters.admin import AdminFilter
-from tgbot.keyboards.inline import admin_menu, admin_vpn_menu
+from tgbot.keyboards.inline import admin_menu
 
 admin_router = Router()
 admin_router.message.filter(AdminFilter())

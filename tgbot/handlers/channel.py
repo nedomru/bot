@@ -95,7 +95,7 @@ async def handle_accept_channel(callback: CallbackQuery, bot: Bot) -> None:
         try:
             await bot.send_message(
                 chat_id=user_id,
-                text="✅ Ваша заявка на вступление в канал была одобрена!"
+                text="✅ Твоя заявка на вступление в канал была одобрена!"
             )
         except Exception as e:
             logging.error(f"Failed to send approval message to user: {e}")
@@ -142,7 +142,7 @@ async def handle_deny_channel(callback: CallbackQuery, bot: Bot) -> None:
         try:
             await bot.send_message(
                 chat_id=user_id,
-                text="❌ Ваша заявка на вступление в канал была отклонена."
+                text="❌ Твоя заявка на вступление в канал была отклонена."
             )
         except Exception as e:
             logging.error(f"Failed to send denial message to user: {e}")

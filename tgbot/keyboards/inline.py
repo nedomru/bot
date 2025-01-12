@@ -1,5 +1,5 @@
 from aiogram.filters.callback_data import CallbackData
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
@@ -21,6 +21,7 @@ def accept_to_channel(user_id):
     )
     return keyboard
 
+
 # Сообщение ливнувшему юзеру
 def leaved_user(user_id):
     buttons = [
@@ -33,6 +34,7 @@ def leaved_user(user_id):
         inline_keyboard=buttons,
     )
     return keyboard
+
 
 # Админ-меню
 def admin_menu():
@@ -51,6 +53,7 @@ def admin_menu():
     )
     return keyboard
 
+
 def admin_vpn_menu():
     buttons = [
         [
@@ -65,7 +68,8 @@ def admin_vpn_menu():
         ],
         [
             InlineKeyboardButton(text="🏠 Домой", callback_data="adminmenu"),
-        ]
+        ],
+
     ]
 
     keyboard = InlineKeyboardMarkup(
@@ -73,11 +77,16 @@ def admin_vpn_menu():
     )
     return keyboard
 
+
 def user_menu():
     buttons = [
         [
             InlineKeyboardButton(text="💵 Расчет ЗП", callback_data="usermenu_salary"),
             InlineKeyboardButton(text="🌐 VPN", callback_data="usermenu_vpn"),
+        ],
+        [
+            InlineKeyboardButton(text='Фломастер', web_app=WebAppInfo(url=f'https://flomaster.chrsnv.ru/')),
+            InlineKeyboardButton(text='Гайдмастер', web_app=WebAppInfo(url=f'https://guides.chrsnv.ru/'))
         ]
     ]
 
