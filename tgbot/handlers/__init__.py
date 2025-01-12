@@ -2,9 +2,11 @@
 from .admin import admin_router
 from .user import user_router
 from .channel import channel_router
+from .vpn import admin_vpn_router
 
 routers_list = [
     admin_router,
+    admin_vpn_router,
     user_router,
     channel_router,
 ]

@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-# This is a simple keyboard, that contains 2 buttons
+# Принятие в канал
 def accept_to_channel(user_id):
     buttons = [
         [
@@ -21,10 +21,63 @@ def accept_to_channel(user_id):
     )
     return keyboard
 
+# Сообщение ливнувшему юзеру
 def leaved_user(user_id):
     buttons = [
         [
             InlineKeyboardButton(text="✉️ Написать", url=f"https://t.me/{user_id}"),
+        ]
+    ]
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=buttons,
+    )
+    return keyboard
+
+# Админ-меню
+def admin_menu():
+    buttons = [
+        [
+            InlineKeyboardButton(text="👨‍👦‍👦 Пользователи", callback_data="adminmenu_users"),
+            InlineKeyboardButton(text="🌐 VPN", callback_data="adminmenu_vpn"),
+        ],
+        [
+            InlineKeyboardButton(text="💵 ЗП", callback_data="adminmenu_salary"),
+        ]
+    ]
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=buttons,
+    )
+    return keyboard
+
+def admin_vpn_menu():
+    buttons = [
+        [
+            InlineKeyboardButton(text="📊 Статус сервера", callback_data="adminmenu_vpn_serverstatus")
+        ],
+        [
+            InlineKeyboardButton(text="👨‍👦‍👦 Пользователи", callback_data="adminmenu_vpn_users"),
+            InlineKeyboardButton(text="🌐 Ноды", callback_data="adminmenu_vpn_nodes"),
+        ],
+        [
+            InlineKeyboardButton(text="👨‍👦‍👦 Пользователи", callback_data="adminmenu_vpn_restartxray"),
+        ],
+        [
+            InlineKeyboardButton(text="🏠 Домой", callback_data="adminmenu"),
+        ]
+    ]
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=buttons,
+    )
+    return keyboard
+
+def user_menu():
+    buttons = [
+        [
+            InlineKeyboardButton(text="💵 Расчет ЗП", callback_data="usermenu_salary"),
+            InlineKeyboardButton(text="🌐 VPN", callback_data="usermenu_vpn"),
         ]
     ]
 
