@@ -11,13 +11,15 @@ admin_router.message.filter(AdminFilter())
 
 @admin_router.message(CommandStart())
 async def admin_start(message: Message):
-    await message.answer("☎️ Главное меню <b>Не Дом.ру</b>", reply_markup=admin_menu())
+    await message.answer("☎️ Главное меню <b>Не Дом.ру</b>\n\n"
+                         "Я - бот-помощник проекта Не Дом.ру\n"
+                         "<i>Используй кнопки ниже для администрирования</i>", reply_markup=admin_menu())
 
 
 @admin_router.callback_query(F.data == "adminmenu")
 async def handle_menu(callback: CallbackQuery) -> None:
     """Главное меню"""
-    await callback.message.edit_text("☎️ Главное меню <b>Не Дом.ру</b>", reply_markup=admin_menu())
+    await callback.message.edit_text("☎️ Главное меню <b>Не Дом.ру</b>\n\nИспользуй кнопки снизу для управления ботом", reply_markup=admin_menu())
     await callback.answer()
 
 @admin_router.message(Command("kick"))

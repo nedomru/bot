@@ -28,7 +28,10 @@ async def user_start(message: Message):
     if not await is_user_in_channel(message.from_user.id, bot=message.bot):
         return
 
-    await message.answer("☎️ Главное меню <b>Не Дом.ру</b>", reply_markup=user_menu())
+    await message.answer("☎️ Главное меню <b>Не Дом.ру</b>\n\n"
+                         "Я - бот-помощник проекта Не Дом.ру\n"
+                         "Здесь ты найдешь расчет зарплаты, наш ВПН, и многое другое\n\n"
+                         "<i>Используй кнопки ниже для управления меню</i>", reply_markup=user_menu())
 
 @user_router.callback_query(F.data == "usermenu")
 async def handle_menu(callback: CallbackQuery) -> None:
@@ -37,7 +40,10 @@ async def handle_menu(callback: CallbackQuery) -> None:
         await callback.answer()
         return
 
-    await callback.message.edit_text("☎️ Главное меню <b>Не Дом.ру</b>", reply_markup=user_menu())
+    await callback.message.edit_text("☎️ Главное меню <b>Не Дом.ру</b>\n\n"
+                         "Я - бот-помощник проекта Не Дом.ру\n"
+                         "Здесь ты найдешь расчет ЗП, наш ВПН, и многое другое\n\n"
+                         "<i>Используй кнопки ниже для управления мной</i>", reply_markup=user_menu())
     await callback.answer()
 
 @user_router.callback_query(F.data == "usermenu_salary")

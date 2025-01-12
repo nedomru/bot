@@ -31,7 +31,8 @@ async def handle_join_request(request: ChatJoinRequest, bot: Bot) -> None:
         # Отправка уведомления админу
         admin_msg = await bot.send_message(
             chat_id=6486127400,
-            text=f"<b>Вход в канал</b>\nПользователь {user.username} (ID: {user.id}) оставил запрос на вход в канал{invite_info}",
+            text=f"<b>📩 Новая заявка</b>\n\n"
+                 f"Пользователь {user.username} (ID: <code>{user.id}</code>) оставил запрос на вход в канал{invite_info}",
             reply_markup=accept_to_channel(user_id=user.username)
         )
 
@@ -62,7 +63,7 @@ async def on_user_leave(event: ChatMemberUpdated, bot: Bot):
 
 @channel_router.callback_query(F.data == "accept_channel")
 async def handle_accept_channel(callback: CallbackQuery, bot: Bot) -> None:
-    """Подтверждение заявки на вход в канал"""
+    """Подтверждение заявки на вход"""
     try:
         if callback.message.message_id not in pending_requests:
             await callback.answer("Запрос устарел или уже обработан", show_alert=True)
@@ -109,7 +110,7 @@ async def handle_accept_channel(callback: CallbackQuery, bot: Bot) -> None:
 
 @channel_router.callback_query(F.data == "deny_channel")
 async def handle_deny_channel(callback: CallbackQuery, bot: Bot) -> None:
-    """Отмена заявки на вход в канал"""
+    """Отмена заявки на вход"""
     try:
         if callback.message.message_id not in pending_requests:
             await callback.answer("Запрос устарел или уже обработан", show_alert=True)
