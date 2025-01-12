@@ -21,19 +21,23 @@ async def handle_join_request(request: ChatJoinRequest, bot: Bot) -> None:
     """Обрабатываем входящие запросы на вход."""
     user = request.from_user
     chat_id = request.chat.id
+    
+    # Получаем инфо о пригласительной ссылке
+    invite_info = ""
+    if request.invite_link:
+        invite_info = f"\nПришел по ссылке: <i>{request.invite_link.name if request.invite_link.name else request.invite_link.invite_link}</i>"
 
     try:
         # Отправка уведомления админу
         admin_msg = await bot.send_message(
             chat_id=6486127400,
-            text=f"<b>Вход в канал</b>\nПользователь {user.username} (ID: {user.id})",
+            text=f"<b>Вход в канал</b>\nПользователь {user.username} (ID: {user.id}) оставил запрос на вход в канал{invite_info}",
             reply_markup=accept_to_channel(user_id=user.username)
         )
 
-        # Store the request details with the message_id as key
         pending_requests[admin_msg.message_id] = (chat_id, user.id, datetime.now())
 
-        # Clean up old pending requests (older than 24 hours)
+        # Чистим старые запросы (старше 24 часов)
         current_time = datetime.now()
         expired_messages = [
             msg_id for msg_id, (_, _, timestamp) in pending_requests.items()
