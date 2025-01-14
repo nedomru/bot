@@ -32,7 +32,7 @@ async def handle_join_request(request: ChatJoinRequest, bot: Bot) -> None:
         admin_msg = await bot.send_message(
             chat_id=6486127400,
             text=f"<b>📩 Новая заявка</b>\n\n"
-                 f"Пользователь {user.username} (ID: <code>{user.id}</code>) оставил запрос на вход в канал{invite_info}",
+                 f"Пользователь @{user.username} (ID: <code>{user.id}</code>) оставил запрос на вход в канал{invite_info}",
             reply_markup=accept_to_channel(user_id=user.username)
         )
 
@@ -57,7 +57,7 @@ async def on_user_leave(event: ChatMemberUpdated, bot: Bot):
     # Отправка уведомления админу
     await bot.send_message(
         chat_id=6486127400,
-        text=f"<b>Выход из канала</b>\nПользователь {event.from_user.username} (ID: {event.from_user.id}) покинул канал",
+        text=f"<b>Выход из канала</b>\nПользователь @{event.from_user.username} (ID: {event.from_user.id}) покинул канал",
         reply_markup=leaved_user(user_id=event.from_user.username)
     )
 
