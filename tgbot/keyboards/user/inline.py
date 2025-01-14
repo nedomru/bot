@@ -40,3 +40,15 @@ def user_vpn_menu(sub_link="https://google.com"):
         inline_keyboard=buttons,
     )
     return keyboard
+
+def to_home():
+    buttons = [
+        [
+            InlineKeyboardButton(text="🏠 Домой", callback_data="usermenu"),
+        ]
+    ]
+
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=buttons,
+    )
+    return keyboard

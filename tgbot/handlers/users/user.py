@@ -1,4 +1,4 @@
-from aiogram import Router, F, Bot, types
+from aiogram import Router, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 
@@ -44,13 +44,4 @@ async def handle_menu(callback: CallbackQuery) -> None:
                          "Я - бот-помощник проекта Не Дом.ру\n"
                          "Здесь ты найдешь расчет ЗП, наш ВПН, и многое другое\n\n"
                          "<i>Используй кнопки ниже для управления мной</i>", reply_markup=user_menu())
-    await callback.answer()
-
-@user_router.callback_query(F.data == "usermenu_salary")
-async def handle_salary(callback: CallbackQuery) -> None:
-    """Меню зарплаты"""
-    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
-        await callback.answer()
-        return
-
     await callback.answer()
