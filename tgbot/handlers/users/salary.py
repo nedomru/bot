@@ -4,6 +4,7 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
+from tgbot.handlers.users.user import is_user_in_channel
 from tgbot.keyboards.user.inline import to_home
 from tgbot.keyboards.user.salary import salary_count_type, salary_user_position, salary_user_aht, salary_user_flr, \
     salary_user_gok, salary_user_rate, salary_user_tests, salary_user_acknowledgments, salary_user_mentor, \
@@ -18,6 +19,11 @@ user_salary_router = Router()
 async def start_count_salary(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.set_state(SalaryCountStates.COUNT_TYPE)
 
     await callback.message.edit_text("💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
@@ -32,6 +38,11 @@ async def start_count_salary(callback: CallbackQuery, state: FSMContext):
 @user_salary_router.message(SalaryCountStates.COUNT_TYPE)
 async def process_salary_type(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     count_type = callback.data.split("_")[-1]
     await state.update_data(COUNT_TYPE=count_type)
 
@@ -50,6 +61,11 @@ async def process_salary_type(callback: CallbackQuery, state: FSMContext) -> Non
 @user_salary_router.message(SalaryCountStates.POSITION)
 async def process_position(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(POSITION=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.HOURS_WORKED)
@@ -66,6 +82,10 @@ async def process_position(callback: CallbackQuery, state: FSMContext) -> None:
 
 @user_salary_router.message(SalaryCountStates.HOURS_WORKED)
 async def process_hours_worked(message: Message, state: FSMContext) -> None:
+    # Проверка на подписку
+    if not await is_user_in_channel(message.from_user.id, bot=message.bot):
+        return
+
     await state.update_data(HOURS_WORKED=message.text)
     user_data = await state.get_data()
 
@@ -92,6 +112,10 @@ async def process_hours_worked(message: Message, state: FSMContext) -> None:
 
 @user_salary_router.message(SalaryCountStates.PREMIUM_PERCENT)
 async def process_premium_percent(message: Message, state: FSMContext) -> None:
+    # Проверка на подписку
+    if not await is_user_in_channel(message.from_user.id, bot=message.bot):
+        return
+
     await state.update_data(PREMIUM_PERCENT=message.text)
     user_data = await state.get_data()
 
@@ -170,6 +194,11 @@ async def process_premium_percent(message: Message, state: FSMContext) -> None:
 @user_salary_router.message(SalaryCountStates.AHT)
 async def process_aht(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(AHT=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.FLR)
@@ -187,6 +216,11 @@ async def process_aht(callback: CallbackQuery, state: FSMContext) -> None:
 @user_salary_router.message(SalaryCountStates.FLR)
 async def process_flr(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(FLR=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.GOK)
@@ -204,6 +238,11 @@ async def process_flr(callback: CallbackQuery, state: FSMContext) -> None:
 @user_salary_router.message(SalaryCountStates.GOK)
 async def process_gok(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(GOK=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.CLIENT_RATING)
@@ -221,6 +260,11 @@ async def process_gok(callback: CallbackQuery, state: FSMContext) -> None:
 @user_salary_router.message(SalaryCountStates.CLIENT_RATING)
 async def process_rate(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(CLIENT_RATING=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.TESTS)
@@ -236,6 +280,11 @@ async def process_rate(callback: CallbackQuery, state: FSMContext):
 @user_salary_router.message(SalaryCountStates.TESTS)
 async def process_tests(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(TESTS=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.ACKNOWLEDGMENTS)
@@ -253,6 +302,11 @@ async def process_tests(callback: CallbackQuery, state: FSMContext):
 @user_salary_router.message(SalaryCountStates.ACKNOWLEDGMENTS)
 async def process_acknowledgments(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(ACKNOWLEDGMENTS=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.MENTOR)
@@ -267,6 +321,11 @@ async def process_acknowledgments(callback: CallbackQuery, state: FSMContext):
 @user_salary_router.message(SalaryCountStates.MENTOR)
 async def process_mentoring(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(MENTOR=callback.data.split("_")[-1])
 
     if callback.data.split("_")[-1] == "yes":
@@ -343,6 +402,11 @@ async def process_mentoring(callback: CallbackQuery, state: FSMContext):
 @user_salary_router.message(SalaryCountStates.MENTOR_TYPE)
 async def process_mentoring_type(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(MENTOR_TYPE=callback.data.split("_")[-1])
 
     await state.set_state(SalaryCountStates.MENTOR_DAYS)
@@ -356,6 +420,11 @@ async def process_mentoring_type(callback: CallbackQuery, state: FSMContext):
 @user_salary_router.message(SalaryCountStates.MENTOR_DAYS)
 async def process_mentoring_days(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
+
+    # Проверка на подписку
+    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
+        return
+
     await state.update_data(MENTOR_DAYS=callback.data.split("_")[-1])
     user_data = await state.get_data()
 
@@ -425,9 +494,3 @@ async def process_mentoring_days(callback: CallbackQuery, state: FSMContext):
 Коэфициент региона нивелируется налогами</blockquote>"""
     await callback.message.edit_text(message, reply_markup=to_home())
     await state.clear()
-
-
-@user_salary_router.callback_query(F.data == "purchases_sales")
-async def my_orders(callback: CallbackQuery):
-    await callback.answer()
-    await callback.message.edit_text("Вы открыли ваши часики!")
