@@ -39,35 +39,10 @@ def admin_menu():
     buttons = [
         [
             InlineKeyboardButton(text="👨‍👦‍👦 Пользователи", callback_data="adminmenu_users"),
-            InlineKeyboardButton(text="🌐 VPN", callback_data="adminmenu_vpn"),
         ],
         [
             InlineKeyboardButton(text="💵 Расчет ЗП", callback_data="usermenu_salary"),
         ]
-    ]
-
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=buttons,
-    )
-    return keyboard
-
-
-def admin_vpn_menu():
-    buttons = [
-        [
-            InlineKeyboardButton(text="📊 Статус сервера", callback_data="adminmenu_vpn_serverstatus")
-        ],
-        [
-            InlineKeyboardButton(text="👨‍👦‍👦 Пользователи", callback_data="adminmenu_vpn_users"),
-            InlineKeyboardButton(text="🌐 Ноды", callback_data="adminmenu_vpn_nodes"),
-        ],
-        [
-            InlineKeyboardButton(text="🌀 Ребут ядра", callback_data="adminmenu_vpn_restartxray"),
-        ],
-        [
-            InlineKeyboardButton(text="🏠 Домой", callback_data="adminmenu"),
-        ],
-
     ]
 
     keyboard = InlineKeyboardMarkup(
