@@ -2,7 +2,7 @@ from aiogram import Router, F, Bot, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message, CallbackQuery
 
-from tgbot.keyboards.inline import user_menu
+from tgbot.keyboards.user.inline import user_menu
 
 user_router = Router()
 
@@ -48,15 +48,6 @@ async def handle_menu(callback: CallbackQuery) -> None:
 
 @user_router.callback_query(F.data == "usermenu_salary")
 async def handle_salary(callback: CallbackQuery) -> None:
-    """Меню зарплаты"""
-    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
-        await callback.answer()
-        return
-
-    await callback.answer()
-
-@user_router.callback_query(F.data == "usermenu_vpn")
-async def handle_vpn(callback: CallbackQuery) -> None:
     """Меню зарплаты"""
     if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
         await callback.answer()

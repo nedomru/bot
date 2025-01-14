@@ -7,7 +7,7 @@ from typing import Dict
 
 from datetime import datetime, timedelta
 
-from tgbot.keyboards.inline import accept_to_channel, leaved_user
+from tgbot.keyboards.admin.inline import accept_to_channel, leaved_user
 
 channel_router = Router()
 
