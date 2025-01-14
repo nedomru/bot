@@ -11,7 +11,7 @@ admin_vpn_router.message.filter(AdminFilter())
 @admin_vpn_router.callback_query(F.data == "adminmenu_vpn")
 async def handle_menu_adminvpn(callback: CallbackQuery) -> None:
     """Меню VPN"""
-    await callback.message.edit_text("🛡️ Меню <b>Не Дом.ру | ВПН</b>", reply_markup=admin_vpn_menu())
+    await callback.message.edit_text("🛡️ <b>Не Дом.ру | ВПН</b>", reply_markup=admin_vpn_menu())
     await callback.answer()
 
 @admin_vpn_router.callback_query(F.data == "adminmenu_vpn_serverstatus")
