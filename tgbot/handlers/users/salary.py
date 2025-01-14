@@ -140,8 +140,7 @@ async def process_premium_percent(message: Message, state: FSMContext) -> None:
 
 Общая сумма после вычета составляет <b>{salary["salary_sum"]}</b> руб
 
-<blockquote expandable>
-<b>Важно:</b>
+<blockquote expandable><b>Важно:</b>
 1. В расчет берется часовая ставка по Перми
 2. Коэффициент региона не учитывается
 3. Налоги не учитываются
@@ -327,8 +326,7 @@ async def process_mentoring(callback: CallbackQuery, state: FSMContext):
 
 Общая сумма после вычета составляет <b>{salary["salary_sum"]}</b> руб
 
-<blockquote expandable>
-<b>Важно:</b>
+<blockquote expandable><b>Важно:</b>
 1. В расчет берется часовая ставка по Перми
 2. Коэффициент региона не учитывается
 3. Налоги не учитываются
@@ -417,8 +415,7 @@ async def process_mentoring_days(callback: CallbackQuery, state: FSMContext):
 
 Общая сумма после вычета составляет <b>{salary["salary_sum"]}</b> руб
 
-<blockquote expandable>
-<b>Важно:</b>
+<blockquote expandable><b>Важно:</b>
 1. В расчет берется часовая ставка по Перми
 2. Коэффициент региона не учитывается
 3. Налоги не учитываются
