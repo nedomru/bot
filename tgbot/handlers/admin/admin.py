@@ -22,7 +22,7 @@ async def handle_menu(callback: CallbackQuery) -> None:
     await callback.message.edit_text("☎️ Главное меню <b>Не Дом.ру</b>\n\nИспользуй кнопки снизу для управления ботом", reply_markup=admin_menu())
     await callback.answer()
 
-@admin_router.message(Command("kick"))
+@admin_router.message(Command("ban"))
 async def kick_user(message: Message):
     try:
         # Получаем user_id из аргумента функции
@@ -39,12 +39,14 @@ async def kick_user(message: Message):
                     chat_id=group_id,
                     user_id=user_id
                 )
-                results.append(f"✅ Юзер успешно исключен из {group_id}")
+                chat = await message.bot.get_chat(chat_id=group_id)
+                results.append(f"✅ <b>{chat.title}</b> - успешная блокировка")
             except Exception as e:
-                results.append(f"❌ Не удалось кикнуть юзера из {group_id}: {str(e)}")
+                chat = await message.bot.get_chat(chat_id=group_id)
+                results.append(f"❌ <b>{chat.title}</b> - Ошибка блокировки: {str(e)}")
 
         # Отправка репорта
-        await message.reply("\n".join(results))
+        await message.reply("<b>⛔ Блокировка пользователя</b>\n\n".join(results))
 
     except (IndexError, ValueError):
         await message.reply("❌ Некорректный формат. Используй: /kick USER_ID")
