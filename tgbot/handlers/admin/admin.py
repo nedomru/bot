@@ -46,7 +46,9 @@ async def kick_user(message: Message):
                 results.append(f"❌ <b>{chat.title}</b> - Ошибка блокировки: {str(e)}")
 
         # Отправка репорта
-        await message.reply("<b>⛔ Блокировка пользователя</b>\n\n".join(results))
+        ready_message = "<b>⛔ Блокировка пользователя</b>\n"
+        ready_message += "\n".join(results)
+        await message.reply(ready_message)
 
     except (IndexError, ValueError):
         await message.reply("❌ Некорректный формат. Используй: /kick USER_ID")
