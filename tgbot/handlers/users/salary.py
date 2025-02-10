@@ -130,12 +130,12 @@ async def process_premium_percent(message: Message, state: FSMContext) -> None:
                 rate = 156.7
                 position_name = "Специалист НЦК1"
             case "nck1leading":
-                rate = 164, 2
+                rate = 164.2
                 position_name = "Ведущий специалист НЦК1"
             case "nck2":
                 rate = 181
                 position_name = "Специалист НЦК2"
-            case "nck2":
+            case "nck2leading":
                 rate = 195.9
                 position_name = "Ведущий специалист НЦК2"
 
