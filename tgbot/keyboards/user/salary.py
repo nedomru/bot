@@ -29,6 +29,9 @@ def salary_user_position():
             InlineKeyboardButton(text="👨‍💻 Ведущий НЦК2", callback_data="usermenu_salary_position_nck2leading")
         ],
         [
+            InlineKeyboardButton(text="👨‍💻 РГ", callback_data="usermenu_salary_position_rg"),
+        ],
+        [
             InlineKeyboardButton(text="🏠 Домой", callback_data="usermenu"),
         ]
     ]

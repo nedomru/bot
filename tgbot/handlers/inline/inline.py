@@ -3,6 +3,8 @@ import logging
 from aiogram import Router, F, Bot, types
 from aiogram.types import InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 
+# from tgbot.misc.algolia import search
+
 inline_router = Router()
 
 # Локальный список MnA
@@ -783,8 +785,9 @@ async def handle_inline_query(query: InlineQuery, bot: Bot):
         search_query = query.query.lower()
 
         # Если запрос начинается с 'r ' или 'р ' (русская), ищем по роутерам
-        if search_query.startswith(('r ', 'р ')):
-            search_term = search_query[2:]
+        if search_query.startswith(('router ', 'роутер ')):
+            search_term = search_query[7:]
+            print(search_term)
             filtered_data = [
                 item for item in ROUTER_DATA
                 if search_term in item['name'].lower()
@@ -831,8 +834,8 @@ async def handle_inline_query(query: InlineQuery, bot: Bot):
                 )
 
         # Если запрос начинается с 'm ' или 'м ' (русская), ищем по MNA
-        elif search_query.startswith(('m ', 'м ')):
-            search_term = search_query[2:]  # Убираем префикс и пробел
+        elif search_query.startswith(('mna ', 'мна ')):
+            search_term = search_query[4:]  # Убираем префикс и пробел
             filtered_data = [
                 item for item in MNA_DATA
                 if search_term in item['name'].lower() or
@@ -861,6 +864,7 @@ async def handle_inline_query(query: InlineQuery, bot: Bot):
                     )
                 )
 
+       
         # Если нет префикса или пустой запрос, показываем инструкцию
         else:
             results = [
