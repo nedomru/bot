@@ -30,7 +30,6 @@ async def user_start(message: Message):
 
     await message.answer("☎️ <b>Не Дом.ру | Главное меню</b>\n\n"
                          "Я - бот-помощник проекта Не Дом.ру\n"
-                         "Здесь ты найдешь расчет зарплаты, наш ВПН, и многое другое\n\n"
                          "<i>Используй кнопки ниже для управления меню</i>", reply_markup=user_menu())
 
 @user_router.callback_query(F.data == "usermenu")
@@ -42,6 +41,5 @@ async def handle_menu(callback: CallbackQuery) -> None:
 
     await callback.message.edit_text("☎️ <b>Не Дом.ру | Главное меню</b>\n\n"
                          "Я - бот-помощник проекта Не Дом.ру\n"
-                         "Здесь ты найдешь расчет ЗП, наш ВПН, и многое другое\n\n"
                          "<i>Используй кнопки ниже для управления мной</i>", reply_markup=user_menu())
     await callback.answer()
