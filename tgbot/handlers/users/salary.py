@@ -26,7 +26,7 @@ async def start_count_salary(callback: CallbackQuery, state: FSMContext):
 
     await state.set_state(SalaryCountStates.COUNT_TYPE)
 
-    await callback.message.edit_text("💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+    await callback.message.edit_text("<b>💸 Расчет ЗП</b>\n\n"
                                      "В этом разделе ты можешь посчитать свои денежки\n\n"
                                      "Для начала выбери тип расчета:\n"
                                      "📊 Показатели - ручное заполнение показателей\n"
@@ -48,11 +48,11 @@ async def process_salary_type(callback: CallbackQuery, state: FSMContext) -> Non
 
     await state.set_state(SalaryCountStates.POSITION)
     if count_type == "sum":
-        await callback.message.edit_text("💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        await callback.message.edit_text("<b>💸 Расчет ЗП</b>\n\n"
                                          "Хорошо, считаем по общему проценту премии\n\n"
                                          "💼 Теперь выбери ниже твою должность", reply_markup=salary_user_position())
     else:
-        await callback.message.edit_text("💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        await callback.message.edit_text("<b>💸 Расчет ЗП</b>\n\n"
                                          "Хорошо, считаем процент каждого показателя отдельно\n\n"
                                          "💼 Теперь выбери ниже твою должность", reply_markup=salary_user_position())
 
@@ -70,7 +70,7 @@ async def process_position(callback: CallbackQuery, state: FSMContext) -> None:
 
     await state.set_state(SalaryCountStates.HOURS_WORKED)
     bot_message = await callback.message.edit_text(
-        "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        "<b>💸 Расчет ЗП</b>\n\n"
         "Супер, должность выбрана!\n\n"
         "⏳ Введи в чат кол-во отработанных часов за месяц\n\n"
         "Часы можно найти в WFM\n"
@@ -95,7 +95,7 @@ async def process_hours_worked(message: Message, state: FSMContext) -> None:
     bot_message = await message.bot.edit_message_text(
         chat_id=message.chat.id,
         message_id=user_data["LAST_BOT_MESSAGE_ID"],
-        text="💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        text="<b>💸 Расчет ЗП</b>\n\n"
              "Кол-во часов запомнил, давай продолжим\n\n" +
              ("🌟 Введи общий <b>процент премии</b>" if user_data[
                                                            "COUNT_TYPE"] == "sum" else "🚀 Выбери процент премии за <b>личную цель</b>\n\n"
@@ -147,7 +147,7 @@ async def process_premium_percent(message: Message, state: FSMContext) -> None:
         await message.bot.edit_message_text(
             chat_id=message.chat.id,
             message_id=user_data["LAST_BOT_MESSAGE_ID"],
-            text=f"""💸 <b>Не Дом.ру | Расчет ЗП</b>
+            text=f"""<b>💸 Расчет ЗП</b>
 
 <b>Показатели</b>
 💼 <b>Должность</b>: {position_name}
@@ -178,7 +178,7 @@ async def process_premium_percent(message: Message, state: FSMContext) -> None:
         await message.bot.edit_message_text(
             chat_id=message.chat.id,
             message_id=user_data["LAST_BOT_MESSAGE_ID"],
-            text="💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+            text="<b>💸 Расчет ЗП</b>\n\n"
                  "🚀 Выбери процент премии за <b>личную цель</b>\n\n"
                  "Найти его можно в Премиуме\n"
                  "<i><a href='https://i.imgur.com/L62rmBK.png'>Пример на картинке</a></i>",
@@ -200,7 +200,7 @@ async def process_aht(callback: CallbackQuery, state: FSMContext) -> None:
 
     await state.set_state(SalaryCountStates.FLR)
     await callback.message.edit_text(
-        "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        "<b>💸 Расчет ЗП</b>\n\n"
         "👽 Выбери процент премии за <b>FLR</b>\n\n"
         "Найти его можно в Премиуме\n"
         "<i><a href='https://i.imgur.com/lsEEoni.png'>Пример на картинке</a></i>",
@@ -222,7 +222,7 @@ async def process_flr(callback: CallbackQuery, state: FSMContext) -> None:
 
     await state.set_state(SalaryCountStates.GOK)
     await callback.message.edit_text(
-        "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        "<b>💸 Расчет ЗП</b>\n\n"
         "🤢 Выбери процент премии за <b>ГОК</b>\n\n"
         "Найти его можно в Премиуме\n"
         "<i><a href='https://i.imgur.com/S6cOdVK.png'>Пример на картинке</a></i>",
@@ -244,7 +244,7 @@ async def process_gok(callback: CallbackQuery, state: FSMContext) -> None:
 
     await state.set_state(SalaryCountStates.CLIENT_RATING)
     await callback.message.edit_text(
-        "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        "<b>💸 Расчет ЗП</b>\n\n"
         "⭐ Выбери процент премии за <b>оценку от клиента</b>\n\n"
         "Найти его можно в Премиуме\n"
         "<i><a href='https://i.imgur.com/LBKoWz8.png'>Пример на картинке</a></i>",
@@ -266,7 +266,7 @@ async def process_rate(callback: CallbackQuery, state: FSMContext):
 
     await state.set_state(SalaryCountStates.TESTS)
     await callback.message.edit_text(
-        "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        "<b>💸 Расчет ЗП</b>\n\n"
         "🧪 Прошел ли ты все <b>обязательные тесты</b>\n\n"
         "Найти тесты можно <a href='https://okc.ertelecom.ru/stats/testing/lk/profile'>тут</a>\n",
         reply_markup=salary_user_tests(),
@@ -286,7 +286,7 @@ async def process_tests(callback: CallbackQuery, state: FSMContext):
 
     await state.set_state(SalaryCountStates.ACKNOWLEDGMENTS)
     await callback.message.edit_text(
-        "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        "<b>💸 Расчет ЗП</b>\n\n"
         "🙏🏻 Выбери процент премии за <b>благодарности</b>\n\n"
         "1 благодарность - 3% премии\n"
         "Максимум благодарностей в месяц - 2\n\n"
@@ -308,7 +308,7 @@ async def process_acknowledgments(callback: CallbackQuery, state: FSMContext):
 
     await state.set_state(SalaryCountStates.MENTOR)
     await callback.message.edit_text(
-        "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+        "<b>💸 Расчет ЗП</b>\n\n"
         "🎓 Ты <b>наставник</b>?\n",
         reply_markup=salary_user_mentor(),
     )
@@ -328,7 +328,7 @@ async def process_mentoring(callback: CallbackQuery, state: FSMContext):
     if callback.data.split("_")[-1] == "yes":
         await state.set_state(SalaryCountStates.MENTOR_TYPE)
         await callback.message.edit_text(
-            "💸 <b>Не Дом.ру | Расчет ЗП</b>\n\n"
+            "<b>💸 Расчет ЗП</b>\n\n"
             "🎓 Выбери тип наставничества",
             reply_markup=salary_user_mentor_type(),
         )
@@ -362,7 +362,7 @@ async def process_mentoring(callback: CallbackQuery, state: FSMContext):
             acknowledgments=int(user_data["ACKNOWLEDGMENTS"]),
         )
 
-        message = f"""💸 <b>Не Дом.ру | Расчет ЗП</b>
+        message = f"""<b>💸 Расчет ЗП</b>
 
 <b>Показатели</b>
 💼 <b>Должность</b>: {position_name}
@@ -461,7 +461,7 @@ async def process_mentoring_days(callback: CallbackQuery, state: FSMContext):
     else:
         mentor_type = "Общий"
 
-    message = f"""💸 <b>Не Дом.ру | Расчет ЗП</b>
+    message = f"""<b>💸 Расчет ЗП</b>
 
 <b>Показатели</b>
 💼 <b>Должность</b>: {position_name}

@@ -28,7 +28,7 @@ async def user_start(message: Message):
     if not await is_user_in_channel(message.from_user.id, bot=message.bot):
         return
 
-    await message.answer("☎️ <b>Не Дом.ру | Главное меню</b>\n\n"
+    await message.answer("<b>☎️ Главное меню</b>\n\n"
                          "Я - бот-помощник проекта Не Дом.ру\n"
                          "<i>Используй кнопки ниже для управления меню</i>", reply_markup=user_menu())
 
@@ -39,7 +39,7 @@ async def handle_menu(callback: CallbackQuery) -> None:
         await callback.answer()
         return
 
-    await callback.message.edit_text("☎️ <b>Не Дом.ру | Главное меню</b>\n\n"
+    await callback.message.edit_text("<b>☎️ Главное меню</b>\n\n"
                          "Я - бот-помощник проекта Не Дом.ру\n"
                          "<i>Используй кнопки ниже для управления мной</i>", reply_markup=user_menu())
     await callback.answer()
