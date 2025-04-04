@@ -21,12 +21,11 @@ def salary_count_type():
 def salary_user_position():
     buttons = [
         [
-            InlineKeyboardButton(text="👨‍💻 НЦК1", callback_data="usermenu_salary_position_nck1"),
-            InlineKeyboardButton(text="👨‍💻 Ведущий НЦК1", callback_data="usermenu_salary_position_nck1leading")
+            InlineKeyboardButton(text="👶🏻 Спец.", callback_data="usermenu_salary_position_specialist"),
+            InlineKeyboardButton(text="🔥 Ведущий Спец.", callback_data="usermenu_salary_position_lead_specialist")
         ],
         [
-            InlineKeyboardButton(text="👨‍💻 НЦК 2", callback_data="usermenu_salary_position_nck2"),
-            InlineKeyboardButton(text="👨‍💻 Ведущий НЦК2", callback_data="usermenu_salary_position_nck2leading")
+            InlineKeyboardButton(text="👑 Эксперт", callback_data="usermenu_salary_position_expert"),
         ],
         [
             InlineKeyboardButton(text="👨‍💻 РГ", callback_data="usermenu_salary_position_rg"),
