@@ -66,7 +66,7 @@ async def process_position(callback: CallbackQuery, state: FSMContext) -> None:
     if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
         return
 
-    await state.update_data(POSITION=callback.data.split("_")[-1])
+    await state.update_data(POSITION=callback.data.split("usermenu_salary_position_")[1])
 
     await state.set_state(SalaryCountStates.HOURS_WORKED)
     bot_message = await callback.message.edit_text(
