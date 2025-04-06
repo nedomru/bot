@@ -338,18 +338,15 @@ async def process_mentoring(callback: CallbackQuery, state: FSMContext):
         rate = None
         position_name = None
         match user_data["POSITION"]:
-            case "nck1":
+            case "specialist":
                 rate = 156.7
-                position_name = "Специалист НЦК1"
-            case "nck1leading":
-                rate = 164, 2
-                position_name = "Ведущий специалист НЦК1"
-            case "nck2":
-                rate = 181
-                position_name = "Специалист НЦК2"
-            case "nck2":
+                position_name = "Спец."
+            case "lead_specialist":
+                rate = 164.2
+                position_name = "Ведущий спец."
+            case "expert":
                 rate = 195.9
-                position_name = "Ведущий специалист НЦК2"
+                position_name = "Эксперт"
 
         salary = await salary_with_percents(
             hourly_payment=rate,
@@ -428,18 +425,15 @@ async def process_mentoring_days(callback: CallbackQuery, state: FSMContext):
     rate = None
     position_name = None
     match user_data["POSITION"]:
-        case "nck1":
+        case "specialist":
             rate = 156.7
-            position_name = "Специалист НЦК1"
-        case "nck1leading":
-            rate = 164, 2
-            position_name = "Ведущий специалист НЦК1"
-        case "nck2":
-            rate = 181
-            position_name = "Специалист НЦК2"
-        case "nck2":
+            position_name = "Спец."
+        case "lead_specialist":
+            rate = 164.2
+            position_name = "Ведущий спец."
+        case "expert":
             rate = 195.9
-            position_name = "Ведущий специалист НЦК2"
+            position_name = "Эксперт"
 
     salary = await salary_with_percents(
         hourly_payment=rate,
