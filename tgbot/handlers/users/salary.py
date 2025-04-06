@@ -73,7 +73,7 @@ async def process_position(callback: CallbackQuery, state: FSMContext) -> None:
         "<b>💸 Расчет ЗП</b>\n\n"
         "Супер, должность выбрана!\n\n"
         "⏳ Введи в чат кол-во отработанных часов за месяц\n\n"
-        "Часы можно найти в WFM\n"
+        "Часы можно найти в <a href='https://okc2.ertelecom.ru/wfm/vueapp/month'>WFM</a>\n"
         "<i><a href='https://i.imgur.com/qcE9TQA.png'>Пример на картинке</a></i>",
         reply_markup=to_home(),
         disable_web_page_preview=True)
