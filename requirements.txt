@@ -1,6 +1,6 @@
 aiogram~=3.20.0
 environs~=9.0
-marshmallow-sqlalchemy~=1.4.2
+marshmallow~=4.0.0
 redis~=6.2.0
 betterlogging
 requests
