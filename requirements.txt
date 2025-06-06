@@ -3,6 +3,7 @@ environs~=9.0
 redis
 betterlogging
 requests
+algoliasearch
 
 # # For enabling api:
 # backoff
