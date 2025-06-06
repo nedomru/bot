@@ -87,10 +87,10 @@ async def inline_search_handler(query: InlineQuery, bot: Bot):
         emoji = ""
         if lvl0_value and lvl0_value.strip():
             first_word = lvl0_value.strip().split(" ")[0]
-            if any(char in first_word for char in "🌐🔧🛠️📶📱💡📲📞"):  # Расширяем при необходимости
+            if any(char in first_word for char in "🛠️🌐📺📟📼🔧📝💭🗣️😡📚🛒🚀📡🎥"):  # можно расширить список
                 emoji = first_word
 
-        # 🔵 Заголовок в inline-меню: emoji + lvl2+
+        # 🔵 Заголовок: emoji + lvl2+
         title_parts = [
             hierarchy.get(f"lvl{j}")
             for j in range(2, 7)
@@ -98,7 +98,7 @@ async def inline_search_handler(query: InlineQuery, bot: Bot):
         ]
         title = f"{emoji} {' → '.join(title_parts)}" if title_parts else f"{emoji} Без названия"
 
-        # 🟣 Полный путь для сообщения: lvl0 → lvl1 → lvl2+
+        # 🟣 Полный путь: lvl0 → lvl1 → lvl2...
         full_path_parts = [
             hierarchy.get(f"lvl{j}")
             for j in range(7)
@@ -106,13 +106,16 @@ async def inline_search_handler(query: InlineQuery, bot: Bot):
         ]
         full_path = " → ".join(full_path_parts)
 
-        # ✉️ Сообщение при выборе
+        # 🖼️ thumbnail_url из emoji
+        thumbnail_url = f"https://emojicdn.elk.sh/{emoji}" if emoji else None
+
+        # ✉️ Контент сообщения
         input_content = types.InputTextMessageContent(
             message_text=(
                 f"<b>Поиск по Фломастеру</b>\n\n"
                 f"🔎 Запрос: {query_text}\n"
-                f"🔗 Ссылка: <a href='{message_url}'>{full_path}</a>\n"
-                f""
+                f"🔗 Ссылка: {full_path}\n"
+                f"{message_url}"
             ),
             parse_mode="HTML",
             disable_web_page_preview=True
@@ -124,7 +127,8 @@ async def inline_search_handler(query: InlineQuery, bot: Bot):
             description=description,
             input_message_content=input_content,
             url=message_url,
-            hide_url=False
+            hide_url=False,
+            thumbnail_url=thumbnail_url
         )
 
         results.append(result)
