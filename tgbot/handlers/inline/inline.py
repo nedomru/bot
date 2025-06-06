@@ -114,8 +114,7 @@ async def inline_search_handler(query: InlineQuery, bot: Bot):
             message_text=(
                 f"<b>Поиск по Фломастеру</b>\n\n"
                 f"🔎 Запрос: {query_text}\n"
-                f"🔗 Ссылка: {full_path}\n"
-                f"{message_url}"
+                f"🔗 Ссылка: <a href='{message_url}'>{full_path}</a>"
             ),
             parse_mode="HTML",
             disable_web_page_preview=True
