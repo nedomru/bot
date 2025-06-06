@@ -1,10 +1,10 @@
 aiogram~=3.20.0
-environs~=9.0
-marshmallow~=4.0.0
+environs~=14.2.0
+marshmallow~=3.26.1
 redis~=6.2.0
-betterlogging
-requests
-algoliasearch
+betterlogging~=1.0.0
+requests~=2.32.3
+algoliasearch~=4.19.0
 
 # # For enabling api:
 # backoff
