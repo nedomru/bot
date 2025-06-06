@@ -56,7 +56,7 @@ def search_algolia(query: str) -> Dict[str, Any]:
         logging.error(f"Algolia error: {e}")
         return {}
 
-# === Inline Query обработчик ===
+
 @inline_router.inline_query()
 async def inline_search_handler(query: InlineQuery, bot: Bot):
     query_text = query.query.strip()
@@ -68,16 +68,52 @@ async def inline_search_handler(query: InlineQuery, bot: Bot):
     hits = results_data.get("hits", [])
     results = []
 
-    for i, hit in enumerate(hits[:10]):  # Ограничим до 10 результатов
+    for i, hit in enumerate(hits[:10]):
         hierarchy = hit.get("hierarchy", {})
-        title = " → ".join(filter(None, [hierarchy.get(f"lvl{j}") for j in range(7)])) or "Без названия"
-        description = hit.get("url", "")
+        highlight_hierarchy = hit.get("_highlightResult", {}).get("hierarchy", {})
         message_url = hit.get("url", "")
 
+        # 🟡 Собираем matchedWords из highlightResult
+        matched_words_set = set()
+        for level_info in highlight_hierarchy.values():
+            matched_words_set.update(level_info.get("matchedWords", []))
+        description = (
+            f"По словам: {', '.join(sorted(matched_words_set))}"
+            if matched_words_set else "Без ключевых слов"
+        )
+
+        # 🟢 Emoji из lvl0
+        lvl0_value = hierarchy.get("lvl0", "")
+        emoji = ""
+        if lvl0_value and lvl0_value.strip():
+            first_word = lvl0_value.strip().split(" ")[0]
+            if any(char in first_word for char in "🌐🔧🛠️📶📱💡📲📞"):  # Расширяем при необходимости
+                emoji = first_word
+
+        # 🔵 Заголовок в inline-меню: emoji + lvl2+
+        title_parts = [
+            hierarchy.get(f"lvl{j}")
+            for j in range(2, 7)
+            if hierarchy.get(f"lvl{j}")
+        ]
+        title = f"{emoji} {' → '.join(title_parts)}" if title_parts else f"{emoji} Без названия"
+
+        # 🟣 Полный путь для сообщения: lvl0 → lvl1 → lvl2+
+        full_path_parts = [
+            hierarchy.get(f"lvl{j}")
+            for j in range(7)
+            if hierarchy.get(f"lvl{j}")
+        ]
+        full_path = " → ".join(full_path_parts)
+
+        # ✉️ Сообщение при выборе
         input_content = types.InputTextMessageContent(
-            message_text=f"<b>Поиск по Фломастеру</b>\n\n"
-                         f"🔎 Запрос: {query_text}\n"
-                         f"🔗 Ссылка: <a href='{message_url}'>{title}</a>",
+            message_text=(
+                f"<b>Поиск по Фломастеру</b>\n\n"
+                f"🔎 Запрос: {query_text}\n"
+                f"🔗 Ссылка: <a href='{message_url}'>{full_path}</a>\n"
+                f""
+            ),
             parse_mode="HTML",
             disable_web_page_preview=True
         )
