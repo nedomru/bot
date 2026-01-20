@@ -29,7 +29,7 @@ from tgbot.dialogs.states.user import UserSG
 menu_window = Window(
     Const("<b>☎️ Главное меню</b>\n\nЯ - бот проекта <b>Не Дом.ру</b>\n"),
     Start(Const("⚙️ Настройки Хелпера"), state=UserSG.settings, id="settings"),
-    Group(
+    Row(
         Url(Const("🤝 Группа"), url=Const("https://t.me/+2vVZ0vXJiWFkOWZi")),
         Url(Const("📺 Канал"), url=Const("https://t.me/+jH1mblw0ytcwOWUy")),
     ),
@@ -64,8 +64,8 @@ def create_arm_checkboxes():
         widget_id = f"arm_{setting_key}"
         checkboxes.append(
             Checkbox(
-                Const(f"✅ {setting_name}"),
-                Const(f"☑️ {setting_name}"),
+                Const(f"🔘 {setting_name}"),
+                Const(f"⚪️ {setting_name}"),
                 id=widget_id,
                 on_click=on_arm_setting_click,
             )
@@ -80,8 +80,8 @@ def create_genesys_checkboxes():
         widget_id = f"genesys_{setting_key}"
         checkboxes.append(
             Checkbox(
-                Const(f"✅ {setting_name}"),
-                Const(f"☑️ {setting_name}"),
+                Const(f"🔘 {setting_name}"),
+                Const(f"⚪️ {setting_name}"),
                 id=widget_id,
                 on_click=on_genesys_setting_click,
             )

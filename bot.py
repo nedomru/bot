@@ -14,6 +14,7 @@ from infrastructure.database.setup import create_engine, create_session_pool
 from tgbot.config import load_config, Config
 from tgbot.dialogs import dialogs_list
 from tgbot.handlers import routers_list
+from tgbot.middlewares.access import AccessMiddleware
 from tgbot.middlewares.config import ConfigMiddleware
 from tgbot.middlewares.database import DatabaseMiddleware
 from tgbot.services import broadcaster
@@ -35,6 +36,7 @@ def register_global_middlewares(dp: Dispatcher, config: Config, session_pool=Non
     :return: None
     """
     middleware_types = [
+        AccessMiddleware(),
         ConfigMiddleware(config),
         DatabaseMiddleware(session_pool),
     ]
