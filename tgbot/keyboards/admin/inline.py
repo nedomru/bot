@@ -5,13 +5,12 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 def accept_to_channel(user_id):
     buttons = [
         [
-            InlineKeyboardButton(text="✔️ Принять",
-                                 callback_data="accept_channel"),
+            InlineKeyboardButton(text="✔️ Принять", callback_data="accept_channel"),
             InlineKeyboardButton(text="❌ Отклонить", callback_data="deny_channel"),
         ],
         [
             InlineKeyboardButton(text="✉️ Написать", url=f"https://t.me/{user_id}"),
-        ]
+        ],
     ]
 
     keyboard = InlineKeyboardMarkup(
@@ -38,11 +37,13 @@ def leaved_user(user_id):
 def admin_menu():
     buttons = [
         [
-            InlineKeyboardButton(text="👨‍👦‍👦 Пользователи", callback_data="adminmenu_users"),
+            InlineKeyboardButton(
+                text="👨‍👦‍👦 Пользователи", callback_data="adminmenu_users"
+            ),
         ],
         [
             InlineKeyboardButton(text="💵 Расчет ЗП", callback_data="usermenu_salary"),
-        ]
+        ],
     ]
 
     keyboard = InlineKeyboardMarkup(

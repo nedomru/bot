@@ -8,9 +8,14 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 
+from aiogram_dialog import setup_dialogs
+
+from infrastructure.database.setup import create_engine, create_session_pool
 from tgbot.config import load_config, Config
+from tgbot.dialogs import dialogs_list
 from tgbot.handlers import routers_list
 from tgbot.middlewares.config import ConfigMiddleware
+from tgbot.middlewares.database import DatabaseMiddleware
 from tgbot.services import broadcaster
 
 
@@ -31,7 +36,7 @@ def register_global_middlewares(dp: Dispatcher, config: Config, session_pool=Non
     """
     middleware_types = [
         ConfigMiddleware(config),
-        # DatabaseMiddleware(session_pool),
+        DatabaseMiddleware(session_pool),
     ]
 
     for middleware_type in middleware_types:
@@ -91,12 +96,22 @@ async def main():
     config = load_config(".env")
     storage = get_storage(config)
 
-    bot = Bot(token=config.tg_bot.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    # Create database session pool
+    session_pool = None
+    if config.db:
+        engine = create_engine(config.db)
+        session_pool = create_session_pool(engine)
+
+    bot = Bot(
+        token=config.tg_bot.token,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
     dp = Dispatcher(storage=storage)
 
-    dp.include_routers(*routers_list)
+    dp.include_routers(*routers_list, *dialogs_list)
 
-    register_global_middlewares(dp, config)
+    register_global_middlewares(dp, config, session_pool)
+    setup_dialogs(dp)
 
     await on_startup(bot, config.tg_bot.admin_ids)
     await dp.start_polling(bot)

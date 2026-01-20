@@ -7,19 +7,28 @@ def user_menu():
             InlineKeyboardButton(text="💵 Расчет ЗП", callback_data="usermenu_salary"),
         ],
         [
-            InlineKeyboardButton(text='🤝 Группа', url="https://t.me/+6aXdfP0eGIsyYWQ6"),
-            InlineKeyboardButton(text='📺 Канал', url="https://t.me/+F0O_FIydoKg2M2U6")
+            InlineKeyboardButton(
+                text="🤝 Группа", url="https://t.me/+6aXdfP0eGIsyYWQ6"
+            ),
+            InlineKeyboardButton(text="📺 Канал", url="https://t.me/+F0O_FIydoKg2M2U6"),
         ],
         [
-            InlineKeyboardButton(text='✏️ Фломастер', web_app=WebAppInfo(url=f'https://flomaster.chrsnv.ru/')),
-            InlineKeyboardButton(text='📖 Гайдмастер', web_app=WebAppInfo(url=f'https://guides.chrsnv.ru/'))
-        ]
+            InlineKeyboardButton(
+                text="✏️ Фломастер",
+                web_app=WebAppInfo(url="https://flomaster.chrsnv.ru/"),
+            ),
+            InlineKeyboardButton(
+                text="📖 Гайдмастер",
+                web_app=WebAppInfo(url="https://guides.chrsnv.ru/"),
+            ),
+        ],
     ]
 
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=buttons,
     )
     return keyboard
+
 
 def to_home():
     buttons = [

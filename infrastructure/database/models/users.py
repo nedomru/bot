@@ -1,10 +1,33 @@
-from typing import Optional
+import json
 
-from sqlalchemy import String
 from sqlalchemy import text, BIGINT, Boolean, true
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base, TimestampMixin, TableNameMixin
+
+DEFAULT_SETTINGS = {
+    "arm": {
+        "foldSpas": False,
+        "foldTabInfo": True,
+        "foldTabAppeals": True,
+        "foldTabCRequests": True,
+        "foldTabSRequests": True,
+        "foldTabApplications": True,
+        "removeAppealsColumns": True,
+        "removeDiagnosticTabs": True,
+    },
+    "genesys": {
+        "allowPaste": True,
+        "hideButtons": True,
+        "showLineStatus": True,
+        "customChatColors": True,
+        "customChatSounds": True,
+        "showDutyMessages": True,
+        "allowChatSizeEdit": True,
+        "autoCollapseChatHeader": True,
+    },
+}
 
 
 class User(Base, TimestampMixin, TableNameMixin):
@@ -15,10 +38,8 @@ class User(Base, TimestampMixin, TableNameMixin):
 
     Attributes:
         user_id (Mapped[int]): The unique identifier of the user.
-        username (Mapped[Optional[str]]): The username of the user.
-        full_name (Mapped[str]): The full name of the user.
-        active (Mapped[bool]): Indicates whether the user is active or not.
-        language (Mapped[str]): The language preference of the user.
+        access (Mapped[bool]): Indicates whether the user has access.
+        settings (Mapped[dict]): User settings stored as JSONB.
 
     Methods:
         __repr__(): Returns a string representation of the User object.
@@ -30,11 +51,13 @@ class User(Base, TimestampMixin, TableNameMixin):
         Inherits methods from Base, TimestampMixin, and TableNameMixin classes, which provide additional functionality.
 
     """
+
     user_id: Mapped[int] = mapped_column(BIGINT, primary_key=True, autoincrement=False)
-    username: Mapped[Optional[str]] = mapped_column(String(128))
-    full_name: Mapped[str] = mapped_column(String(128))
-    active: Mapped[bool] = mapped_column(Boolean, server_default=true())
-    language: Mapped[str] = mapped_column(String(10), server_default=text("'en'"))
+    access: Mapped[bool] = mapped_column(Boolean, server_default=true())
+    settings: Mapped[dict] = mapped_column(
+        JSONB,
+        server_default=text(f"'{json.dumps(DEFAULT_SETTINGS)}'::jsonb"),
+    )
 
     def __repr__(self):
-        return f"<User {self.user_id} {self.username} {self.full_name}>"
+        return f"<User {self.user_id}>"

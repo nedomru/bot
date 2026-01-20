@@ -1,8 +1,9 @@
 from typing import Optional
 
-from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy import select, update
 
 from infrastructure.database.models import User
+from infrastructure.database.models.users import DEFAULT_SETTINGS
 from infrastructure.database.repo.base import BaseRepo
 
 
@@ -10,37 +11,92 @@ class UserRepo(BaseRepo):
     async def get_or_create_user(
         self,
         user_id: int,
-        full_name: str,
-        language: str,
-        username: Optional[str] = None,
     ):
         """
-        Creates or updates a new user in the database and returns the user object.
+        Gets an existing user or creates a new one in the database.
+        Since user_id is the primary key, we first check if user exists.
         :param user_id: The user's ID.
-        :param full_name: The user's full name.
-        :param language: The user's language.
-        :param username: The user's username. It's an optional parameter.
-        :return: User object, None if there was an error while making a transaction.
+        :return: User object.
         """
+        # First try to get existing user
+        user = await self.get_user(user_id)
+        if user:
+            return user
 
-        insert_stmt = (
-            insert(User)
-            .values(
-                user_id=user_id,
-                username=username,
-                full_name=full_name,
-                language=language,
-            )
-            .on_conflict_do_update(
-                index_elements=[User.user_id],
-                set_=dict(
-                    username=username,
-                    full_name=full_name,
-                ),
-            )
+        # User doesn't exist, create new one
+        new_user = User(
+            user_id=user_id,
+            access=True,
+            settings=DEFAULT_SETTINGS,
+        )
+        self.session.add(new_user)
+        await self.session.commit()
+        await self.session.refresh(new_user)
+        return new_user
+
+    async def get_user(self, user_id: int) -> Optional[User]:
+        """
+        Get a user by ID.
+        :param user_id: The user's ID.
+        :return: User object or None if not found.
+        """
+        stmt = select(User).where(User.user_id == user_id)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def update_access(self, user_id: int, access: bool) -> User:
+        """
+        Update user access status.
+        :param user_id: The user's ID.
+        :param access: The new access status.
+        :return: Updated User object.
+        """
+        stmt = (
+            update(User)
+            .where(User.user_id == user_id)
+            .values(access=access)
             .returning(User)
         )
-        result = await self.session.execute(insert_stmt)
-
+        result = await self.session.execute(stmt)
         await self.session.commit()
         return result.scalar_one()
+
+    async def update_settings(self, user_id: int, settings: dict) -> User:
+        """
+        Update user settings.
+        :param user_id: The user's ID.
+        :param settings: The new settings dict.
+        :return: Updated User object.
+        """
+        stmt = (
+            update(User)
+            .where(User.user_id == user_id)
+            .values(settings=settings)
+            .returning(User)
+        )
+        result = await self.session.execute(stmt)
+        await self.session.commit()
+        return result.scalar_one()
+
+    async def update_setting_path(self, user_id: int, path: str, value: bool) -> User:
+        """
+        Update a specific setting using JSONB path.
+        :param user_id: The user's ID.
+        :param path: The path to the setting (e.g., 'arm.foldSpas').
+        :param value: The new value.
+        :return: Updated User object.
+        """
+        user = await self.get_user(user_id)
+        if not user:
+            raise ValueError(f"User {user_id} not found")
+
+        # Parse path and update nested dict
+        parts = path.split(".")
+        current = user.settings
+        for part in parts[:-1]:
+            if part not in current:
+                current[part] = {}
+            current = current[part]
+        current[parts[-1]] = value
+
+        return await self.update_settings(user_id, user.settings)

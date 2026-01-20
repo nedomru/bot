@@ -1,45 +1,13 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.filters import CommandStart
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message
+from aiogram_dialog import DialogManager, StartMode
 
-from tgbot.keyboards.user.inline import user_menu
+from tgbot.dialogs.states.user import UserSG
 
 user_router = Router()
 
-async def is_user_in_channel(user_id: int, bot):
-    channel_id = -1002068999312
-    try:
-        sub = await bot.get_chat_member(chat_id=channel_id, user_id=user_id)
-        if sub.status != "left":
-            return True
-        else:
-            await bot.send_message(chat_id=user_id, text='<b>Привет 👋</b>\n\n'
-                                                         'Для доступа требуется подписка на канал <b>Не Дом.ру</b>\n\n'
-                                                         '<b><a href="https://t.me/+F0O_FIydoKg2M2U6">Подписаться</a></b>\n\n'
-                                                         'После подтверждения заявки вернись в бота и нажми /start', disable_web_page_preview=True)
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-
-    return False
-
 
 @user_router.message(CommandStart())
-async def user_start(message: Message):
-    if not await is_user_in_channel(message.from_user.id, bot=message.bot):
-        return
-
-    await message.answer("<b>☎️ Главное меню</b>\n\n"
-                         "Я - бот-помощник проекта Не Дом.ру\n"
-                         "<i>Используй кнопки ниже для управления меню</i>", reply_markup=user_menu())
-
-@user_router.callback_query(F.data == "usermenu")
-async def handle_menu(callback: CallbackQuery) -> None:
-    """Главное меню"""
-    if not await is_user_in_channel(callback.from_user.id, bot=callback.bot):
-        await callback.answer()
-        return
-
-    await callback.message.edit_text("<b>☎️ Главное меню</b>\n\n"
-                         "Я - бот-помощник проекта Не Дом.ру\n"
-                         "<i>Используй кнопки ниже для управления мной</i>", reply_markup=user_menu())
-    await callback.answer()
+async def user_start(message: Message, dialog_manager: DialogManager):
+    await dialog_manager.start(UserSG.main, mode=StartMode.RESET_STACK)
