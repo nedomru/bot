@@ -142,9 +142,20 @@ class Miscellaneous:
     ----------
     other_params : str, optional
         A string used to hold other various parameters as required (default is None).
+    api_base : str, optional
+        The base URL for the API server (default is "http://localhost:4321").
     """
 
     other_params: str = None
+    api_base: str = None
+
+    @staticmethod
+    def from_env(env: Env):
+        """
+        Creates the Miscellaneous object from environment variables.
+        """
+        api_base = env.str("API_BASE", "http://localhost:4321")
+        return Miscellaneous(other_params=None, api_base=api_base)
 
 
 @dataclass
@@ -189,5 +200,5 @@ def load_config(path: str = None) -> Config:
         tg_bot=TgBot.from_env(env),
         db=DbConfig.from_env(env),
         redis=RedisConfig.from_env(env),
-        misc=Miscellaneous(),
+        misc=Miscellaneous.from_env(env),
     )
