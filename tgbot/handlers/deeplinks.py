@@ -5,7 +5,7 @@ import logging
 
 from aiogram import Router
 from aiogram.filters import CommandStart, CommandObject
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message
 
 from infrastructure.database.models.users import DEFAULT_SETTINGS
 
@@ -28,15 +28,13 @@ async def process_deeplink_start(
         return
 
     session_id = command.args
-    await _handle_authorization_request(message, session_id, user, config)
+    await _authorize_session(message, session_id, user, config)
 
 
-async def _handle_authorization_request(
-    message: Message, session_id: str, user, config
-):
+async def _authorize_session(message: Message, session_id: str, user, config):
     """
-    Handle authorization request from deeplink.
-    Checks user access and authorizes the session via API.
+    Authorize the session directly via API.
+    Checks user access and authorizes the session.
     """
     # Check if user has access
     if not user.access:
@@ -48,57 +46,6 @@ async def _handle_authorization_request(
 
     # Get user data from Telegram
     tg_user = message.from_user
-
-    # Check if user was just created (has default settings)
-    is_new_user = user.settings == DEFAULT_SETTINGS
-
-    # Show authorization message with button
-    from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="🔑 Авторизоваться", callback_data=f"auth_{session_id}"
-                )
-            ]
-        ]
-    )
-
-    welcome_text = (
-        f"🔐 <b>Запрос на авторизацию</b>\n\nПривет, {tg_user.first_name}!\n\n"
-    )
-
-    if is_new_user:
-        welcome_text += "✨ Вы были автоматически зарегистрированы в системе.\n\n"
-
-    welcome_text += "Используй кнопку ниже для подтверждения входа в Хелпер"
-
-    await message.answer(welcome_text, reply_markup=keyboard)
-
-
-@deeplink_router.callback_query(lambda c: c.data and c.data.startswith("auth_"))
-async def process_authorization_callback(
-    callback: CallbackQuery, user, config, **kwargs
-):
-    """
-    Handle the authorize button click - authorize the session via API.
-    """
-    await callback.answer()
-
-    # Extract session ID from callback data
-    session_id = callback.data.replace("auth_", "")
-
-    # Check if user has access
-    if not user.access:
-        await callback.message.edit_text(
-            "❌ <b>Доступ запрещен</b>\n\n"
-            "У вас нет доступа к системе. Обратитесь к администратору."
-        )
-        return
-
-    # Get user data from Telegram
-    tg_user = callback.from_user
     user_data = {
         "id": tg_user.id,
         "first_name": tg_user.first_name,
@@ -106,6 +53,9 @@ async def process_authorization_callback(
         "username": tg_user.username,
         "language_code": tg_user.language_code,
     }
+
+    # Check if user was just created (has default settings)
+    is_new_user = user.settings == DEFAULT_SETTINGS
 
     # Call the API to authorize the session
     import aiohttp
@@ -128,35 +78,37 @@ async def process_authorization_callback(
                 if response.status == 200:
                     data = await response.json()
                     if data.get("success"):
-                        await callback.message.edit_text(
-                            "✅ <b>Успешная авторизация!</b>\n\n"
-                            "Вход был успешно выполнен. Вы можете закрыть это сообщение."
-                        )
+                        success_text = "✅ <b>Успешная авторизация!</b>\n\n"
+                        success_text += f"Привет, {tg_user.first_name}!\n\n"
+                        if is_new_user:
+                            success_text += "✨ Вы были автоматически зарегистрированы в системе.\n\n"
+                        success_text += "Вход был успешно выполнен. Вы можете закрыть это сообщение."
+                        await message.answer(success_text)
                     else:
-                        await callback.message.edit_text(
+                        await message.answer(
                             f"❌ <b>Ошибка авторизации</b>\n\n"
                             f"{data.get('error', 'Неизвестная ошибка')}"
                         )
                 elif response.status == 404:
-                    await callback.message.edit_text(
+                    await message.answer(
                         "❌ <b>Сессия не найдена</b>\n\n"
                         "Сессия истекла или не существует. Попробуйте запросить новую ссылку."
                     )
                 else:
                     error_text = await response.text()
                     logger.error(f"API error: {response.status} - {error_text}")
-                    await callback.message.edit_text(
+                    await message.answer(
                         "❌ <b>Ошибка авторизации</b>\n\nПопробуйте позже."
                     )
     except aiohttp.ClientError as e:
         logger.error(f"Client error during authorization: {e}")
-        await callback.message.edit_text(
+        await message.answer(
             "❌ <b>Ошибка соединения</b>\n\n"
             "Не удалось подключиться к серверу авторизации. Попробуйте позже."
         )
     except Exception as e:
         logger.error(f"Unexpected error during authorization: {e}")
-        await callback.message.edit_text(
+        await message.answer(
             "❌ <b>Неизвестная ошибка</b>\n\n"
             "Произошла непредвиденная ошибка. Попробуйте позже."
         )
