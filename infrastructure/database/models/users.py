@@ -16,6 +16,13 @@ DEFAULT_SETTINGS = {
         "foldTabCRequests": True,
         "removeDiagnosticTabs": True,
         "removeAppealsColumns": True,
+        "foldingTabs": [
+            "foldTabAppeals",
+            "foldTabApplications",
+            "foldTabCRequests",
+            "foldTabInfo",
+            "foldTabSRequests",
+        ],
     },
     "genesys": {
         "showClock": True,

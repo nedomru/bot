@@ -80,9 +80,9 @@ async def _authorize_session(message: Message, session_id: str, user, config):
                     if data.get("success"):
                         success_text = "✅ <b>Успешная авторизация!</b>\n\n"
                         success_text += f"Привет, {tg_user.first_name}!\n\n"
-                        if is_new_user:
-                            success_text += "✨ Вы были автоматически зарегистрированы в системе.\n\n"
-                        success_text += "Вход был успешно выполнен. Вы можете закрыть это сообщение."
+                        success_text += (
+                            "Вход был успешно выполнен, можешь вернуться в расширение"
+                        )
                         await message.answer(success_text)
                     else:
                         await message.answer(
@@ -92,7 +92,7 @@ async def _authorize_session(message: Message, session_id: str, user, config):
                 elif response.status == 404:
                     await message.answer(
                         "❌ <b>Сессия не найдена</b>\n\n"
-                        "Сессия истекла или не существует. Попробуйте запросить новую ссылку."
+                        "Сессия истекла или не существует. Попробуй запросить новую ссылку."
                     )
                 else:
                     error_text = await response.text()
@@ -104,11 +104,11 @@ async def _authorize_session(message: Message, session_id: str, user, config):
         logger.error(f"Client error during authorization: {e}")
         await message.answer(
             "❌ <b>Ошибка соединения</b>\n\n"
-            "Не удалось подключиться к серверу авторизации. Попробуйте позже."
+            "Не удалось подключиться к серверу авторизации. Попробуй позже."
         )
     except Exception as e:
         logger.error(f"Unexpected error during authorization: {e}")
         await message.answer(
             "❌ <b>Неизвестная ошибка</b>\n\n"
-            "Произошла непредвиденная ошибка. Попробуйте позже."
+            "Произошла непредвиденная ошибка. Попробуй позже."
         )
