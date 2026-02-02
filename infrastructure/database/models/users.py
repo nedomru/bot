@@ -34,6 +34,9 @@ DEFAULT_SETTINGS = {
         "allowChatSizeEdit": True,
         "autoCollapseChatHeader": True,
         "allowPaste": True,
+        "autoClose": True,
+        "ctrlClose": False,
+        "showPresets": True,
     },
 }
 
