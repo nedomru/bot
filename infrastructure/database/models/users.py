@@ -9,18 +9,13 @@ from .base import Base, TimestampMixin, TableNameMixin
 DEFAULT_SETTINGS = {
     "arm": {
         "foldSpas": False,
-        "foldTabInfo": True,
-        "foldTabApplications": True,
-        "foldTabAppeals": True,
-        "foldTabSRequests": True,
-        "foldTabCRequests": True,
         "removeDiagnosticTabs": True,
         "removeAppealsColumns": True,
         "foldingTabs": [
-            "foldTabAppeals",
-            "foldTabApplications",
-            "foldTabCRequests",
             "foldTabInfo",
+            "foldTabApplications",
+            "foldTabAppeals",
+            "foldTabCRequests",
             "foldTabSRequests",
         ],
     },

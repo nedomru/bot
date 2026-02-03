@@ -1,6 +1,7 @@
 from typing import Optional
 
 from sqlalchemy import select, update
+from sqlalchemy.dialects.postgresql import insert
 
 from infrastructure.database.models import User
 from infrastructure.database.models.users import DEFAULT_SETTINGS
@@ -14,7 +15,7 @@ class UserRepo(BaseRepo):
     ):
         """
         Gets an existing user or creates a new one in the database.
-        Since user_id is the primary key, we first check if user exists.
+        Uses PostgreSQL's ON CONFLICT to handle race conditions atomically.
         :param user_id: The user's ID.
         :return: User object.
         """
@@ -23,16 +24,22 @@ class UserRepo(BaseRepo):
         if user:
             return user
 
-        # User doesn't exist, create new one
-        new_user = User(
-            user_id=user_id,
-            access=True,
-            settings=DEFAULT_SETTINGS,
+        # User doesn't exist, create new one using INSERT ... ON CONFLICT
+        # to handle race conditions when multiple requests create the same user
+        stmt = (
+            insert(User)
+            .values(
+                user_id=user_id,
+                access=True,
+                settings=DEFAULT_SETTINGS,
+            )
+            .on_conflict_do_nothing()
         )
-        self.session.add(new_user)
+        await self.session.execute(stmt)
         await self.session.commit()
-        await self.session.refresh(new_user)
-        return new_user
+
+        # Return the user (either just created or existing)
+        return await self.get_user(user_id)
 
     async def get_user(self, user_id: int) -> Optional[User]:
         """
