@@ -22,6 +22,10 @@ class AccessMiddleware(BaseMiddleware):
         bot = data["bot"]
         user_id = event.from_user.id
 
+        # Only check access for private messages (direct bot interaction)
+        if event.chat.type != "private":
+            return await handler(event, data)
+
         logger.info(f"AccessMiddleware: Checking access for user {user_id}")
 
         # Valid statuses: member, administrator, creator
