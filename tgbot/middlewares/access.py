@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 class AccessMiddleware(BaseMiddleware):
     CHANNEL_ID = -1002068999312
-    GROUP_ID = -1003653519335
 
     async def __call__(
         self,
@@ -53,28 +52,6 @@ class AccessMiddleware(BaseMiddleware):
         except Exception as e:
             logger.error(f"Unexpected error checking channel for user {user_id}: {e}")
             await event.answer("Ошибка проверки доступа к каналу")
-            return
-
-        try:
-            # Check if user is in the group
-            member = await bot.get_chat_member(chat_id=self.GROUP_ID, user_id=user_id)
-            logger.info(f"User {user_id} group status: {member.status}")
-
-            if member.status not in VALID_STATUSES:
-                logger.warning(f"User {user_id} not in group (status: {member.status})")
-                await event.answer(
-                    "Для доступа требуется нахождение в <a href='https://t.me/+2vVZ0vXJiWFkOWZi'>чате</a>."
-                )
-                return
-        except TelegramBadRequest as e:
-            logger.warning(f"User {user_id} not in group: {e}")
-            await event.answer(
-                "Для доступа требуется нахождение в <a href='https://t.me/+2vVZ0vXJiWFkOWZi'>чате</a>."
-            )
-            return
-        except Exception as e:
-            logger.error(f"Unexpected error checking group for user {user_id}: {e}")
-            await event.answer("Ошибка проверки доступа к чату")
             return
 
         logger.info(f"AccessMiddleware: User {user_id} passed all checks")
